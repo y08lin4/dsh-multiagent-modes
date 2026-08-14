@@ -10,6 +10,10 @@
  *
  * 本文件零依赖（不 import 任何 npm 包）：预设目录旁没有 node_modules，
  * 手写 ToolDefinition 形状直接交给 ctx.tools.register。
+ * 注意：parameters 必须写「已编译」的原始 JSON Schema（type:object +
+ * properties + 对象级 required 数组）。官方 defineTool 会把属性级
+ * required:true 编译提升为对象级 required:[...]；这里跳过编译直接注册，
+ * 若手写属性级 required，中转（new-api）会按非法 schema 拒绝（400）。
  *
  * 限制（README 已如实标注）：
  * - 仅覆盖 continuable 子代理（本工具固定后台模式）；one-shot / workflow
@@ -52,24 +56,26 @@ function makeTool(ctx, provider, toolName, wording) {
     name: toolName,
     description: wording.description,
     parameters: {
-      description: {
-        type: "string",
-        required: true,
-        description: "A short (3-5 word) description of the delegated task, for display.",
+      type: "object",
+      properties: {
+        description: {
+          type: "string",
+          description: "A short (3-5 word) description of the delegated task, for display.",
+        },
+        prompt: {
+          type: "string",
+          description: wording.prompt,
+        },
+        model: {
+          type: "string",
+          description: "Optional model id for this child (e.g. \"deepseek-v4-flash\", \"deepseek-v4-pro\"). Omit to inherit the main agent's model.",
+        },
+        effort: {
+          type: "string",
+          description: "Optional reasoning effort for this child, one of \"off\" (no thinking), \"minimal\"/\"low\" (quick answers), \"medium\"/\"high\" (normal reasoning), \"xhigh\" (hard debugging), \"max\" (deep reasoning). Omit for the model's default effort.",
+        },
       },
-      prompt: {
-        type: "string",
-        required: true,
-        description: wording.prompt,
-      },
-      model: {
-        type: "string",
-        description: "Optional model id for this child (e.g. \"deepseek-v4-flash\", \"deepseek-v4-pro\"). Omit to inherit the main agent's model.",
-      },
-      effort: {
-        type: "string",
-        description: "Optional reasoning effort for this child, one of \"off\" (no thinking), \"minimal\"/\"low\" (quick answers), \"medium\"/\"high\" (normal reasoning), \"xhigh\" (hard debugging), \"max\" (deep reasoning). Omit for the model's default effort.",
-      },
+      required: ["description", "prompt"],
     },
     output: {
       schema: {
