@@ -61,7 +61,7 @@ description: 多 Agent 协作调度模式完整手册：均衡/高效速率档�
 
 ```
 ① 模型：   flash（快、省）            pro（准、贵）
-② 思考：   off（零推理）  high（正常推理）  max（烧脑）
+② 思考：   off（零推理）  minimal/low（快速）  medium/high（正常）  xhigh（疑难）  max（烧脑）
 ③ 委派：   subagent（独立会话，不吃上下文）
            fork（继承本对话）
            workflow（规模化、结构化 fan-out）
@@ -70,7 +70,7 @@ description: 多 Agent 协作调度模式完整手册：均衡/高效速率档�
 **取舍直觉（每次现推，不是规则匹配）：**
 
 - **模型**：机械 / 简单 / 大量 → flash；复杂 / 关键路径 / 要准 → pro。落地：`subagent` / `subagent_fork` 传 `model` 参数（不传 = 继承主代理模型）。
-- **思考**：纯执行 → off；正常需要推理 → high；关键决策 / 疑难问题 → max。落地：同上工具传 `effort` 参数（不传 = 模型默认档）。
+- **思考**：批量/机械 → off；简单执行 → minimal / low；正常推理 → medium / high；疑难排查 → xhigh；关键决策 / 高风险变更 → max。落地：同上工具传 `effort` 参数（不传 = 模型默认档；拿不准从 medium 起，不够准升档、太贵降档）。
 - **委派**：
   - 要复用历史上下文 → fork；
   - 不需要上下文 → subagent；
@@ -141,7 +141,7 @@ persona 软限制实现——均衡档自我约束 ≤ 10，高效档可用到 �
 | 三个维度的**判断与拆解** | ✅ 现在就能做（本文档作为参考） |
 | `workflow` 指定 **model** | ✅ 已可用（`agent(prompt, { model })`） |
 | `subagent` / `subagent_fork` 指定 **model** | ✅ 已接通（本预设本地插件 `plugins/subagent-routed.v2.js`，`model` 参数） |
-| `subagent` / `subagent_fork` 指定 **思考档 effort** | ✅ 已接通（同插件 `effort` 参数，经 ContinuableSetupContribution 的 agent/request proxy 注入） |
+| `subagent` / `subagent_fork` 指定 **思考档 effort** | ✅ 已接通（同插件 `effort` 参数，七档 off/minimal/low/medium/high/xhigh/max，经 ContinuableSetupContribution 的 agent/request proxy 注入） |
 | one-shot / workflow 子代理指定思考档 | ❌ 不经过 proxy，走模型默认档 |
 
 > 思考档 proxy 依赖 `agentOptions` 运行时透传这一非正式契约，官方未来加校验可能失效；
@@ -180,3 +180,6 @@ persona 软限制实现——均衡档自我约束 ≤ 10，高效档可用到 �
 >
 > flash + max 一行（③⑨⑮）基本是「理论格」，日常几乎不碰；18 格里的实用骨架
 > 集中在 ①⑤⑦⑪⑬⑰ 六个锚点上下，其余中频按需。
+>
+> **七档细调对照**：18 格里的 off ≈ off；high ≈ medium/high；max ≈ xhigh/max。
+> 新增的 minimal/low 是「简单执行」中间档（格内不列），按第三节五档规则现推。

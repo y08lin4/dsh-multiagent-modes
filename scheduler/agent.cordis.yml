@@ -36,7 +36,7 @@
 
       每个子任务按三维度现推（不要背表格）：
       - 模型：机械 / 简单 / 大量 → 传 model="deepseek-v4-flash"；复杂 / 关键路径 → 不传 model（继承主代理模型）。
-      - 思考：纯执行 → effort="off"；正常推理 → effort="high"；关键决策 / 疑难问题 → effort="max"；不传则用模型默认档。
+      - 思考（effort 七档 off/minimal/low/medium/high/xhigh/max，按难度挑）：批量/机械 → effort="off"；简单执行 → effort="minimal" 或 "low"；正常推理 → effort="medium" 或 "high"；疑难排查 → effort="xhigh"；关键决策 / 高风险变更 → effort="max"；不传则用模型默认档；拿不准从 "medium" 起、不够准升档、太贵降档。
       - 委派：要复用历史上下文 → subagent_fork；不需要 → subagent；成规模 / 结构化收敛 → workflow。
 
       汇报格式分级（每个派发 prompt 必须写清回传格式）：

@@ -19,7 +19,7 @@
 1. **思维链保真（最强卖点）**：主代理单干会触发上下文压缩、早期推理被摘要化；子代理模式把执行留在子会话，主代理思维链全程保真。
 2. **效率**：子代理并行执行，主代理只决策；吞吐来自分工正确，不是无脑堆并发。
 3. **省 token（副产品）**：回传压缩 + 细拆多轮自然压低 token，但绝不为省 token 牺牲思维链完整。
-4. **按复杂度分流**：`subagent` / `subagent_fork` 支持每单指定 `model`（flash/pro）与 `effort`（off/high/max）——18 格里的模型与思考两个维度都能按任务逐单落地。
+4. **按复杂度分流**：`subagent` / `subagent_fork` 支持每单指定 `model`（flash/pro）与 `effort`（七档 off/minimal/low/medium/high/xhigh/max）——18 格里的模型与思考两个维度都能按任务逐单落地。
 5. **汇报格式分级**：汇总/比对 → JSON；阅读理解 → 结构化 markdown；单一结论 → 结论（1~3 行）→ 关键依据 → 风险。
 
 完整手册见 [docs/调度模式.md](docs/调度模式.md)：三维度（模型 × 思考 × 委派）+ 六个锚点 + 18 格全集。
@@ -40,7 +40,7 @@ Copy-Item -Recurse -Force scheduler-fast $dst
 
 - **两档在对话中随时切换**：说「高效」切高效，说「均衡」切均衡（persona 软切换，无需换预设）。
 - **建议设置**：在 Web GUI 的 settings 中把 `agent-loop` 的 `maxParallelToolCalls` 设为 **20**（全局硬上限，只兜底不驱动行为）；两档差异由 persona 软限制实现（均衡 ≤10 / 高效 ≤20）。
-- **每单指定模型与思考档**：`subagent` / `subagent_fork` 都有可选参数 `model`（如 `deepseek-v4-flash` / `deepseek-v4-pro`，不传 = 继承主代理模型）和 `effort`（`off` / `high` / `max`，不传 = 模型默认档）。例：并行派两个子任务，一个 `subagent(model: flash, effort: off)` 快速干活，一个 `subagent(model: pro, effort: max)` 攻坚。
+- **每单指定模型与思考档**：`subagent` / `subagent_fork` 都有可选参数 `model`（如 `deepseek-v4-flash` / `deepseek-v4-pro`，不传 = 继承主代理模型）和 `effort`（七档 `off`/`minimal`/`low`/`medium`/`high`/`xhigh`/`max`，不传 = 模型默认档；机械活 `off`、简单执行 `minimal`/`low`、正常推理 `medium`/`high`、疑难 `xhigh`、关键决策 `max`）。例：并行派两个子任务，一个 `subagent(model: flash, effort: off)` 快速干活，一个 `subagent(model: pro, effort: max)` 攻坚。
 - **工具固定后台运行**：两个子代理工具始终以 continuable 后台模式运行——立即返回 childId，子代理结束时会通知主代理收结果。
 - **思考档 proxy**：`effort` 由本预设自带的本地插件在子代理创建窗口注入请求（agent/request 拦截），无需官方改动。注意：该机制只覆盖 `subagent` / `subagent_fork` 的 continuable 子代理；one-shot 与 workflow 的子代理不经过此 proxy。上游最小改动方案见 [docs/upstream-proposal.md](docs/upstream-proposal.md)。
 
