@@ -222,7 +222,7 @@
     # 官方 tool-subagent 行由本地插件 ./plugins/subagent-routed.v2.js 取代：
     # 同名注册 subagent / subagent_fork（固定后台 continuable），新增
     # model（每单指定模型，如 deepseek-v4-flash / deepseek-v4-pro）与
-    # effort（每单指定思考档 off/high/max，经 agent/request proxy 注入）参数。
+    # effort（每单指定思考档七档 off/minimal/low/medium/high/xhigh/max，经 agent/request proxy 注入）参数。
 
     # Product providers are host-plane singletons. Copy this preset, then
     # remove `disabled` from either ordinary tool row to expose that product
