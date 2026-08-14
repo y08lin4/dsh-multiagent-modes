@@ -63,5 +63,6 @@ docs/                 完整策略手册（含 18 格全集）与上游提案
 ## 相关链接 / Links
 
 - [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（官方）
+- [dsh-relay-compat](https://github.com/y08lin4/dsh-relay-compat)（DSH 接入第三方中转的兼容工具包：developer-role 补丁 + 一键重打 + 医生插件 + 接入手册）
 - [dsh-plugin topic](https://github.com/topics/dsh-plugin)（社区插件生态）
 - [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)（社区插件列表）
