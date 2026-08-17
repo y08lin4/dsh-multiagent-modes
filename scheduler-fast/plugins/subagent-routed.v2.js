@@ -43,10 +43,12 @@ function effortProxy(childCtx) {
 }
 
 const INHERITS = {
+  kind: "subagent_fork",
   description: "Delegate a task to a subagent that inherits this conversation: a child agent seeded with all completed turns so far (it does not see the current in-flight turn). It runs in the background as a durable continuable child — the runtime notifies you when it settles, and send_message continues the same child conversation. Optional `model` routes this child to a specific model (\"deepseek-v4-flash\" for cheap/fast work, \"deepseek-v4-pro\" for hard work; omit to inherit the main agent's model). Optional `effort` sets this child's reasoning effort, one of \"off\" (no thinking, fastest/cheapest), \"minimal\"/\"low\" (quick answers), \"medium\"/\"high\" (normal reasoning), \"xhigh\" (hard debugging), \"max\" (deep reasoning for critical decisions); omit for the model's default.",
   prompt: "The task for the subagent. It already sees this conversation's completed turns, so build on them freely and state only what is new.",
 }
 const INDEPENDENT = {
+  kind: "subagent",
   description: "Delegate a self-contained task to a subagent (a separate agent that works in its own context; it does not see this conversation, so include everything it needs). It runs in the background as a durable continuable child — the runtime notifies you when it settles, and send_message continues the same child conversation. Optional `model` routes this child to a specific model (\"deepseek-v4-flash\" for cheap/fast work, \"deepseek-v4-pro\" for hard work; omit to inherit the main agent's model). Optional `effort` sets this child's reasoning effort, one of \"off\" (no thinking, fastest/cheapest), \"minimal\"/\"low\" (quick answers), \"medium\"/\"high\" (normal reasoning), \"xhigh\" (hard debugging), \"max\" (deep reasoning for critical decisions); omit for the model's default.",
   prompt: "The complete, self-contained task for the subagent. It does not share this conversation's context, so include everything it needs.",
 }
@@ -86,7 +88,7 @@ function makeTool(ctx, provider, toolName, wording) {
         },
         required: ["childId"],
       },
-      render: (_args, value) => [{ type: "text", text: `started subagent ${value.childId}` }],
+      render: (_args, value) => [{ type: "text", text: `started ${wording.kind} ${value.childId}` }],
     },
     isConcurrencySafe: () => true,
     async execute(args, exec) {

@@ -118,6 +118,7 @@ description: 多 Agent 协作调度模式完整手册：均衡/高效速率档�
 | 旋钮 | 全局值 | 均衡（软限制） | 高效（软限制） | 位置 |
 |---|---|---|---|---|
 | `maxParallelToolCalls` | **20**（一次设好，最大值） | ≤ 10 | ≤ 20 | settings `agent-loop`（Web GUI 有设置项） |
+| 思考档 `off` 映射 | `off:"none"` | — | — | settings `agent-loop`（wire 值映射；raw `off` 直发中转会 400，是 `effort=off` 的硬前提，插件内不兜底） |
 | workflow `maxConcurrentAgents` | 默认自动 `min(16, CPU−2)` | 默认自动 | 20~24（如需） | preset 的 `workflow-worker-thread` 行 |
 | 后台 job `maxConcurrentJobsPerOwner` | 10（默认） | 10 | 调大 | host `jobs` config |
 

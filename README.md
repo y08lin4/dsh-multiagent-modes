@@ -49,8 +49,18 @@ Copy-Item -Recurse -Force scheduler-fast $dst
 ```
 scheduler/            协作模式-均衡（agent.cordis.yml + preset.yml + plugins/ + skills/）
 scheduler-fast/       协作模式-高效（同上）
-docs/                 完整策略手册（含 18 格全集）与上游提案
+docs/                 完整策略手册（含 18 格全集）、测试计划与上游提案
+scripts/              双预设一致性校验脚本（verify-identical.ps1）
 ```
+
+## 维护 / Maintenance
+
+- `scheduler/` 与 `scheduler-fast/` 的 `plugins/subagent-routed.v2.js` 与
+  `skills/scheduler-modes/SKILL.md` 必须**双份保持一致**（两预设仅允许
+  persona 速率档与 preset 元数据不同）。改动后运行
+  `pwsh scripts/verify-identical.ps1` 校验，不一致会报错退出。
+- 完整策略手册 `docs/调度模式.md` 与两份 SKILL 为同一事实的三份副本
+  （SKILL 为运行时加载的唯一事实源），改动须同步。
 
 ## 许可证 / License
 
